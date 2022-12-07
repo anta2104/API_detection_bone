@@ -43,13 +43,13 @@ def process_output(data, threshold, targetSize, labels_map):
                     boxes[i][1] * targetSize['w'], 
                     boxes[i][0] * targetSize['h'], 
                     boxes[i][3] * targetSize['w'], 
-                    boxes[i][2] * targetSize['h']])
+                    boxes[i][2] * targetSize['h'],scores[i]])
             else:
                 results[label] = [[
                     boxes[i][1] * targetSize['w'], 
                     boxes[i][0] * targetSize['h'], 
                     boxes[i][3] * targetSize['w'], 
-                    boxes[i][2] * targetSize['h']]]
+                    boxes[i][2] * targetSize['h'],scores[i]]]
     
     return results
 

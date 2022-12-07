@@ -69,17 +69,19 @@ def home_page():
         font = cv2.FONT_HERSHEY_PLAIN
         height, width, channels = img.shape
         for i in range(len(boxes)):
-                    x, y, w, h = boxes[i]
+                    x, y, w, h, j= boxes[i]
                     # x = x /width
                     # y = y / height
                     # w = w / width
                     # h = h / height
                     label = 'Fracture'
                     color = (0,0,255)
-                    #score = str(round(confidences[i],4))
+                    score = str(round(j,4))
                     cv2.rectangle(img, (int(x), int(y)), (int(w), int(h)), color, 2)
                     cv2.putText(img, label, (int(x), int(y - 10)), font, 1, color, 1)
-
+                    cv2.putText(img, score, (int(x + 75), int(y - 10)), font, 1, color, 1)
+                    
+    cv2.imwrite('test.jpg' , img)
     img_string = base64.b64encode(img)  
     data = {
         'image_base64': str(img_string)
