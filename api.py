@@ -15,7 +15,7 @@ import torch
 from numpy import random
 import numpy as np
 from fracture import process_output
-
+import io
 
 # Khởi tạo Flask Server Backend
 app = Flask(__name__)
@@ -82,9 +82,20 @@ def home_page():
                     cv2.putText(img, score, (int(x + 75), int(y - 10)), font, 1, color, 1)
                     
     cv2.imwrite('test.jpg' , img)
-    img_string = base64.b64encode(img)  
+    # img = img.resize((640, 640))
+    img_string = base64.b64encode(img) 
+    # buffer = io.BytesIO()
+    # imgdata = base64.b64decode(img_string)
+    # imagez = Image.open(io.BytesIO(imgdata))
+    # new_img = imagez.resize((2,2))
+    # new_img.save(buffer, format='PNG')
+    # img_b64 = base64.b64encode(buffer.getvalue())
+    # print(img_b64)
+    with open('test.jpg', "rb") as f:
+            data1 = base64.b64encode(f.read())
+    print(data1)
     data = {
-        'image_base64': str(img_string)
+        'image_base64': str(data1)
     }
 
     response = app.response_class(response=json.dumps(data),
@@ -96,4 +107,4 @@ def home_page():
 
 
 if __name__ == '__main__':
-    app.run( port='3001', debug=True)
+    app.run( port='3002', debug=True)
