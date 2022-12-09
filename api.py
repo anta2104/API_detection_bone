@@ -63,12 +63,13 @@ def home_page():
         targetSize['w'] = img.shape[1]
 
         output = process_output(results, 0.5, targetSize, label_maps)
-
-        img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
-        boxes = np.array(output['fracture'])
-        font = cv2.FONT_HERSHEY_PLAIN
-        height, width, channels = img.shape
-        for i in range(len(boxes)):
+        if output:
+            img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+            boxes = np.array(output['fracture'])
+            font = cv2.FONT_HERSHEY_PLAIN
+            height, width, channels = img.shape
+            if len(boxes) != 0:
+                for i in range(len(boxes)):
                     x, y, w, h, j= boxes[i]
                     # x = x /width
                     # y = y / height
@@ -80,15 +81,21 @@ def home_page():
                     cv2.rectangle(img, (int(x), int(y)), (int(w), int(h)), color, 2)
                     cv2.putText(img, label, (int(x), int(y - 10)), font, 1, color, 1)
                     cv2.putText(img, score, (int(x + 75), int(y - 10)), font, 1, color, 1)
+                cv2.imwrite('test.jpg' , img)
+
+                with open('test.jpg', "rb") as f:
+                        img_string = base64.b64encode(f.read())
+                data = {
+                    'code': '1',
+                    'image_base64': str(img_string)
+                }
+        else:
+            data = {
+                'code': '0',
+                'message': 'Không tìm thấy tổn thương. Hãy thử với loại chẩn đoán khác.'
+            }
                     
-    cv2.imwrite('test.jpg' , img)
-
-    with open('test.jpg', "rb") as f:
-            img_string = base64.b64encode(f.read())
-    data = {
-        'image_base64': str(img_string)
-    }
-
+    
     response = app.response_class(response=json.dumps(data),
                 status=200,
                 mimetype='application/json')
